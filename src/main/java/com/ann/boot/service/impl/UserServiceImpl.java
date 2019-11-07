@@ -44,4 +44,14 @@ public class UserServiceImpl implements UserService {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public boolean updateUser(User user) {
+        return false;
+    }
+
+    @Override
+    public Integer getCredit(int i) {
+        return null;
+    }
 }

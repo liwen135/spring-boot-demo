@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
+//@Entity
 public class User11 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +23,8 @@ public class User11 {
     @Column(name = "create_time")
     private Date createTime;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id")
+//    @ManyToOne
+//    @JoinColumn(name = "department_id")
     Department department;
 
 
