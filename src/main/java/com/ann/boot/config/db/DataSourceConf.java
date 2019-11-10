@@ -20,7 +20,7 @@ public class DataSourceConf {
 		
 	}
 	@Bean(name = "dataSource")
-	@Profile("test")
+	@Profile("dev")
 	public DataSource testDatasource(Environment env) {
 		HikariDataSource  test = getDataSource(env);	
 		test.setMaximumPoolSize(10);
