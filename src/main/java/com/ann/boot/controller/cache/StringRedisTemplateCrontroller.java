@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.BoundListOperations;
 import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,19 @@ public class StringRedisTemplateCrontroller {
 
     @Autowired
     private StringRedisTemplate redisClient;
+
+    @Autowired
+    private RedisTemplate jsonRedisTemplate;
+
+    @RequestMapping("/testjson.html")
+    public @ResponseBody
+    Object testJson(@RequestParam(defaultValue = "json") String para) throws Exception {
+        jsonRedisTemplate.opsForValue().set("testjson", para);
+        Object str = jsonRedisTemplate.opsForValue().get("testjson");
+
+        return str;
+    }
+
 
     @RequestMapping("/setget.html")
     public @ResponseBody
@@ -69,6 +83,14 @@ public class StringRedisTemplateCrontroller {
 
     }
 
+    /**
+     * ?
+     *
+     * @param key
+     * @param value
+     * @return
+     * @throws Exception
+     */
     @RequestMapping("/connectionset.html")
     public @ResponseBody
     String connectionSet(final String key, final String value) throws Exception {

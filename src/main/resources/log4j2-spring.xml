@@ -19,7 +19,7 @@
         <property name="output_log_level">ERROR</property>
 
         <!-- 日志默认存放路径(所有级别日志) -->
-        <property name="log_fileName">/Data/Log4j2/ann</property>
+        <property name="log_fileName">/export/logs/Log4j2/ann</property>
         <!-- 日志默认同类型日志,同一文件夹下可以存放的数量,不设置此属性则默认为7个 -->
         <property name="log_max">50</property>
 

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -21,6 +19,8 @@ import org.apache.curator.x.discovery.ServiceInstanceBuilder;
 import org.apache.curator.x.discovery.details.JsonInstanceSerializer;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher.Event.EventType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +29,8 @@ import org.springframework.context.annotation.Configuration;
 public class ZookeeperConf {
     @Value("${zk.url}")
     private String zkUrl;
+    private static final Logger logger = LoggerFactory.getLogger(ZookeeperConf.class);
 
-    Log log = LogFactory.getLog(ZookeeperConf.class);
 
     private boolean isLeader = false;
 
@@ -45,7 +45,7 @@ public class ZookeeperConf {
                     WatchedEvent we = event.getWatchedEvent();
                     EventType et = we.getType();
                     if (we.getPath() != null) {
-                        log.info(et + ":" + we.getPath());
+                        logger.info(et + ":" + we.getPath());
                         client.checkExists().watched().forPath(we.getPath());
                     }
 
@@ -81,7 +81,7 @@ public class ZookeeperConf {
 
         // 构造一个服务描述
         ServiceInstanceBuilder<Map> service = ServiceInstance.builder();
-        service.address("192.168.1.100");
+        service.address("127.0.0.1");
         service.port(8080);
         service.name("book");
         Map config = new HashMap();
@@ -90,8 +90,7 @@ public class ZookeeperConf {
 
         ServiceInstance<Map> instance = service.build();
 
-        ServiceDiscovery<Map> serviceDiscovery = ServiceDiscoveryBuilder.builder(Map.class).client(client)
-                .serializer(new JsonInstanceSerializer<Map>(Map.class)).basePath("/service").build();
+        ServiceDiscovery<Map> serviceDiscovery = ServiceDiscoveryBuilder.builder(Map.class).client(client).serializer(new JsonInstanceSerializer<Map>(Map.class)).basePath("/service").build();
         // 服务注册
         serviceDiscovery.registerService(instance);
 
@@ -101,8 +100,7 @@ public class ZookeeperConf {
 
     protected ServiceInstance<Map> findService(CuratorFramework client, String serviceName) throws Exception {
 
-        ServiceDiscovery<Map> serviceDiscovery = ServiceDiscoveryBuilder.builder(Map.class).client(client)
-                .serializer(new JsonInstanceSerializer<Map>(Map.class)).basePath("/service").build();
+        ServiceDiscovery<Map> serviceDiscovery = ServiceDiscoveryBuilder.builder(Map.class).client(client).serializer(new JsonInstanceSerializer<Map>(Map.class)).basePath("/service").build();
 
         serviceDiscovery.start();
 
@@ -112,8 +110,7 @@ public class ZookeeperConf {
         } else {
             // 取第一个服务
             ServiceInstance<Map> service = new ArrayList<ServiceInstance<Map>>(all).get(0);
-            System.out.println(service.getAddress());
-            System.out.println(service.getPayload());
+            logger.info(service.getAddress() + "=" + service.getPayload());
             return service;
 
         }
